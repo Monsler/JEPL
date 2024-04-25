@@ -13,3 +13,17 @@
   }
 ]
 ```
+
+## Variables
+```json
+[
+  {
+    "name": "variable",
+    "args": ["\"name\"", "\"John\""]
+  },
+  {
+    "name": "println",
+    "args": ["\"Hello, \" + name"]
+  }
+]
+```
