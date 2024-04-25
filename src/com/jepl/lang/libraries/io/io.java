@@ -21,7 +21,7 @@ public class io implements Library {
         out.put("mkdir", new Function() {
             @Override
             public void invoke(List<String> args) {
-                String dirname = args.getFirst();
+                String dirname = args.get(0);
                 File file = new File(dirname);
                 if(!file.exists()){
                     file.mkdir();
@@ -31,7 +31,7 @@ public class io implements Library {
         out.put("rmdir", new Function() {
             @Override
             public void invoke(List<String> args) {
-                String dirname = args.getFirst();
+                String dirname = args.get(0);
                 File file = new File(dirname);
                 file.delete();
             }
@@ -39,7 +39,7 @@ public class io implements Library {
         out.put("io_put_contents", new Function() {
             @Override
             public void invoke(List<String> args) {
-                String filename = args.getFirst();
+                String filename = args.get(0);
                 String content = args.get(1);
                 PrintWriter writer;
                 try {
@@ -47,14 +47,14 @@ public class io implements Library {
                 } catch (FileNotFoundException e) {
                     throw new JEPLException(new RuntimeException(e));
                 }
-                writer.println(content);
+                writer.print(content);
                 writer.close();
             }
         });
         out.put("io_get_contents", new Function() {
             @Override
             public void invoke(List<String> args) {
-                String filename = args.getFirst();
+                String filename = args.get(0);
                 String var = args.get(1);
                 try {
                     Values.addVar(var, Files.readString(Path.of(filename)));

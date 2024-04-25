@@ -1,0 +1,12 @@
+[
+  {
+    "name": "for",
+    "args": [1, 7],
+    "body": [
+      {
+        "name": "println",
+        "args": ["\"sigma \"+index"]
+      }
+    ]
+  }
+]
