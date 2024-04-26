@@ -9,4 +9,4 @@ To print a text on the single line, use <b>print</b>.<br>
   }
 ]
 ```
-<code style="color : red">NOTE: if you put more arguments into this array, it will print your text like if you put this: [1, 2, 3], it will output you 1 2 3.</code>
+<code style="color : red">NOTE: If you put more arguments into this array, it will print your text, for example, if you put [1, 2, 3], it will print you 1 2 3.</code>
