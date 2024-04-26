@@ -1,4 +1,4 @@
-## ${\color{lightgreen}Welcome \space \color{green}To \space \color{darkgreen}JEPL Documentation}$
+## ${\color{darkgreen}JEPL Documentation}$
 # Printing a text
 To print a text on the single line, use <b>print</b>.<br>
 ```json
