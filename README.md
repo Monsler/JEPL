@@ -1,8 +1,8 @@
 ## About
 JEPL is interpreting JVM language, that allows to create projects like build scripts, games, applications, etc. <br>
-<a href="https://github.com/Monsler/JEPL/docs/docs-en.md">Documentation 🇬🇧</a>
+<a href="https://github.com/Monsler/JEPL/blob/main/docs/docs-en.md">Documentation 🇬🇧</a>
 <br>
-<a href="https://github.com/Monsler/JEPL/docs/docs-ru.md">Documentation 🇷🇺</a>
+<a href="https://github.com/Monsler/JEPL/blob/main/docs/docs-ru.md">Documentation 🇷🇺</a>
 <br>
 
 ✅ - Fully supported <br>
