@@ -18,49 +18,50 @@ public class io implements Library {
     @Override
     public HashMap<String, Function> invoke() {
         HashMap<String, Function> out = new HashMap<>();
-        out.put("mkdir", new Function() {
-            @Override
-            public void invoke(List<String> args) {
-                String dirname = args.get(0);
-                File file = new File(dirname);
-                if(!file.exists()){
-                    file.mkdir();
-                }
+        out.put("mkdir", args -> {
+            final String dirname = args.get(0);
+            File file = new File(dirname);
+            if(!file.exists()){
+                file.mkdir();
             }
         });
-        out.put("rmdir", new Function() {
-            @Override
-            public void invoke(List<String> args) {
-                String dirname = args.get(0);
-                File file = new File(dirname);
+        out.put("delete", args -> {
+            final String fname = args.get(0);
+            File file = new File(fname);
+            if(file.exists()) {
                 file.delete();
+            }else {
+                throw new JEPLException(new RuntimeException("File "+fname+" isn't exists!"));
             }
         });
-        out.put("io_put_contents", new Function() {
-            @Override
-            public void invoke(List<String> args) {
-                String filename = args.get(0);
-                String content = args.get(1);
-                PrintWriter writer;
-                try {
-                    writer = new PrintWriter(new File(filename));
-                } catch (FileNotFoundException e) {
-                    throw new JEPLException(new RuntimeException(e));
-                }
-                writer.print(content);
-                writer.close();
+        out.put("io_put_contents", args -> {
+            final String filename = args.get(0);
+            final String content = args.get(1);
+            PrintWriter writer;
+            try {
+                writer = new PrintWriter(filename);
+            } catch (FileNotFoundException e) {
+                throw new JEPLException(e);
+            }
+            writer.print(content);
+            writer.close();
+        });
+        out.put("io_get_contents", args -> {
+            final String filename = args.get(0);
+            final String var = args.get(1);
+            try {
+                Values.addVar(var, Files.readString(Path.of(filename)));
+            } catch (IOException e) {
+                throw new JEPLException(e);
             }
         });
-        out.put("io_get_contents", new Function() {
-            @Override
-            public void invoke(List<String> args) {
-                String filename = args.get(0);
-                String var = args.get(1);
-                try {
-                    Values.addVar(var, Files.readString(Path.of(filename)));
-                } catch (IOException e) {
-                    throw new JEPLException(e);
-                }
+        out.put("io_file_rename", args -> {
+           Path src = Path.of(args.get(0));
+           final String newName = args.get(1);
+            try {
+                Files.move(src, src.resolveSibling(newName));
+            } catch (IOException e) {
+                throw new JEPLException(new RuntimeException(e));
             }
         });
         return out;

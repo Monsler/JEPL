@@ -6,7 +6,8 @@ import com.jepl.lang.libraries.Library;
 import java.util.HashMap;
 
 public class Values {
-    public static HashMap<String, String> funs = new HashMap<>(), vars = new HashMap<>();
+    public static HashMap<String, String> funs = new HashMap<>();
+    public static HashMap<String, Object> vars = new HashMap<>();
     public static HashMap<String, HashMap<String, Function>> libs = new HashMap<>();
 
     public static void addFun(String name, String body){
@@ -21,10 +22,10 @@ public class Values {
         if(funs.containsKey(name)){
             return funs.get(name);
         }
-        return "{\"line1\": {\"name\": \"println\", \"args\": [\"\"Function "+name+" is undefined!\"\"]}}";
+        return String.valueOf(0);
     }
 
-    public static void addVar(String name, String value) {
+    public static void addVar(String name, Object value) {
         vars.put(name, value);
     }
 
@@ -33,14 +34,14 @@ public class Values {
         try {
             lib = (Library) Class.forName("com.jepl.lang.libraries."+name+"."+name).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new JEPLException(e);
+            throw new JEPLException(new RuntimeException(e));
         }
         libs.put(name, lib.invoke());
     }
 
     public static String getVar(String name){
         if(vars.containsKey(name)){
-            return vars.get(name);
+            return vars.get(name).toString();
         }else {
             throw new JEPLException(new Throwable("Error! Variable "+name+" is not exists."));
         }

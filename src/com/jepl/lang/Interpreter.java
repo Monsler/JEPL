@@ -12,6 +12,11 @@ import com.jepl.lang.libraries.Function;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -45,13 +50,33 @@ public class Interpreter {
                 String funName = getArgs(args).get(0);
                 Values.addFun(funName, body);
             }else if(name.equals("jump")){
-                String funName = getArgs(args).get(0);
-                Interpreter.interpret(Values.getFun(funName));
+                final List<String> arg = getArgs(args);
+                String funName = arg.get(0);
+                if(arg.size() > 1) {
+                    for (int a = 1; a < arg.size(); a++) {
+                        Values.addVar("arg" + a, arg.get(a));
+                    }
+                }
+                try {
+                    Interpreter.interpret(Values.getFun(funName));
+                }catch (IllegalStateException e){
+                    throw new JEPLException(new NoSuchFieldException(funName + " function is not exist"));
+                }
+                if(arg.size() > 1) {
+                    for (int a = 1; a < arg.size(); a++) {
+                        Values.vars.remove("arg" + a);
+                    }
+                }
             }else if(name.equals("for")){
                 String body = o.get("body").getAsJsonArray().toString();
                 List<String> arg = getArgs(args);
-                int from = Integer.parseInt(arg.get(0));
-                int to = Integer.parseInt(arg.get(1));
+                int from, to;
+                try {
+                    from = Integer.parseInt(arg.get(0));
+                    to = Integer.parseInt(arg.get(1));
+                }catch (NumberFormatException e){
+                    throw new JEPLException(new RuntimeException(e));
+                }
                 for(int x = from; x <= to; x++){
                     Values.addVar("index", String.valueOf(x));
                     Interpreter.interpret(body);
@@ -87,7 +112,7 @@ public class Interpreter {
                 }
             }else if(name.equals("while")) {
                 List<String> arg = getArgs(args);
-                String body = o.get("body").getAsJsonArray().toString();
+                final String body = o.get("body").getAsJsonArray().toString();
                 boolean condition = Boolean.parseBoolean(arg.get(0));
                 while (condition) {
                     Interpreter.interpret(body);
@@ -106,19 +131,53 @@ public class Interpreter {
                 }
             }else if(name.equals("import")) {
                 List<String> arg = getArgs(args);
-                String lname = arg.get(0);
-                Values.addLib(lname);
+                for(String s: arg){
+                    if(!Values.libs.containsKey(s)) {
+                        Values.addLib(s);
+                    }else {
+                        throw new JEPLException(new RuntimeException("Library <"+s+"> already defined!"));
+                    }
+                }
             }else if(name.equals("eval")) {
                 List<String> arg = getArgs(args);
                 String eval = arg.get(0);
-                Interpreter.interpret("["+eval+"]");
-            }else if(name.equals("runtime_execute")){
+                Interpreter.interpret(eval);
+            }else if(name.equals("runtime_execute")) {
                 List<String> arg = getArgs(args);
                 String command = arg.get(0);
                 try {
                     Runtime.getRuntime().exec(command);
                 } catch (IOException e) {
                     throw new JEPLException(new RuntimeException(e));
+                }
+            }else if(name.equals("unload")) {
+                List<String> arg = getArgs(args);
+                for(String s: arg){
+                    Values.libs.remove(s);
+                }
+            }else if(name.equals("getProperty")) {
+                final List<String> arg = getArgs(args);
+                String prop = arg.get(0);
+                String to = arg.get(1);
+                Values.addVar(to, System.getProperty(prop));
+            }else if(name.equals("importJar")){
+                final List<String> arg = getArgs(args);
+                String path = arg.get(0);
+                String addressLib = arg.get(1);
+                try {
+                    URLClassLoader child = new URLClassLoader(
+                            new URL[] { new URL("file:" + path) },
+                            Interpreter.class.getClassLoader()
+                    );
+                    Class<?> classToLoad = Class.forName(addressLib + ".Lib", true, child);
+                    Method method = classToLoad.getDeclaredMethod("invoke");
+                    Object instance = classToLoad.getDeclaredConstructor().newInstance();
+                    HashMap<String, Function> lib = (HashMap<String, Function>) method.invoke(instance);
+                    Values.libs.put(addressLib,  lib);
+
+                } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                         InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
             }else{
                 List<String> arg = getArgs(args);
@@ -144,7 +203,7 @@ public class Interpreter {
             try {
                 out.add(e.evaluate().getStringValue());
             } catch (EvaluationException | ParseException ex) {
-                throw new JEPLException(new RuntimeException("Error [block"+(block+1)+ "] - Unexpected symbol " + ex.getTokenString()));
+                throw new JEPLException(new RuntimeException(ex.getMessage()));
             }
         }
         return out;
@@ -152,17 +211,17 @@ public class Interpreter {
 
     public static Expression getExpression(JsonElement n) {
         Expression e = new Expression(n.getAsString());
+        e.with("jeplversion", Runner.langVersion);
         for(int i = 0; i < Values.vars.size(); i++){
-            for(Map.Entry<String, String> map: Values.vars.entrySet()) {
+            for(Map.Entry<String, Object> map: Values.vars.entrySet()) {
                 Object val;
                 try {
-                    val = Integer.parseInt(map.getValue());
+                    val = Integer.parseInt(map.getValue().toString());
                 }catch (NumberFormatException ev){
                     val = map.getValue();
                 }
                 e.with(map.getKey(), val);
             }
-            e.with("JEPLVersion", Runner.langVersion);
         }
         return e;
     }
