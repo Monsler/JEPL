@@ -3,6 +3,16 @@ JEPL is interpreting JVM language, that allows to create projects like build scr
 <a href="https://github.com/Monsler/JEPL/docs/docs-en.md">Documentation 🇬🇧</a>
 <br>
 <a href="https://github.com/Monsler/JEPL/docs/docs-ru.md">Documentation 🇷🇺</a>
+<br>
+
+✅ - Fully supported <br>
+🟨 - Not tested <br>
+🟥 - Fully broken<br>
+Supported OSES:<br>
+Linux: ✅ <br>
+Windows: ✅ <br>
+Mac OS: 🟨 <br>
+Android: 🟥 
 
 ## Hello world
 ```json
