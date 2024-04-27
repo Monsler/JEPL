@@ -87,7 +87,7 @@ Syntax:
 ```json
 {
    "name": "function",
-   "args": ["\"main"\"],
+   "args": ["\"main\""],
    "body": [...]
 }
 ```
