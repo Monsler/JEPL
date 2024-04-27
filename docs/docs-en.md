@@ -73,7 +73,7 @@ Example:<br>
 [
   {
     "name": "import",
-    "args": ["\"io\"]
+    "args": ["\"io\""]
   },
   {
     "name": "io_put_contents",
