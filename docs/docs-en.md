@@ -24,3 +24,91 @@ It will print something like:<br>
 Hello, world!
 Some text.
 ```
+
+# Getting input
+Syntax: <br>
+
+```json
+{
+  "name": "input",
+  "args": [text, variable]
+}
+```
+Getting user name example:<br>
+```json
+[
+  {
+    "name": "input",
+    "args": ["\"Enter your name:\"", "\"name\""]
+  },
+  {
+    "name": "println",
+    "args": ["\"Hello, \"+name"]
+  }
+
+]
+```
+```
+Enter your name:
+Monsler
+Hello, Monsler
+```
+
+# Importing a library 
+You can add more features to language by importing built-in libraries into your script.<br>
+Syntax:<br>
+```json
+{
+  "name": "import",
+  "args": [lib_name, ...]
+}
+```
+```
+...
+``` is mean that you can import more than one library inside the block.<br>
+Example:<br>
+```json
+[
+  {
+    "name": "import",
+    "args": ["\"io\"]
+  },
+  {
+    "name": "io_put_contents",
+    "args": ["\"file.md\"", "\"Hello from JEPL \"+jeplversion"]
+  }
+]
+```
+
+# Function and it's arguments
+Syntax:
+```json
+{
+   "name": "function",
+   "args": ["\"main"\"],
+   "body": [...]
+}
+```
+Example:<br>
+```json
+[
+{
+  "name": "function",
+  "args": ["\"printWithDots\""],
+  "body": [
+    {
+      "name": "print",
+      "args": ["\".\"+arg1+\".\""]
+    }
+  ]
+},
+{
+  "name": "jump",
+  "args": ["\"printWithDots\"", "\"JEPL!\""]
+}
+]
+```
+Output: <br>
+```
+.JEPL!.
+```
