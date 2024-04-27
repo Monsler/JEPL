@@ -31,7 +31,7 @@ Syntax: <br>
 ```json
 {
   "name": "input",
-  "args": [text, variable]
+  "args": [variable, text]
 }
 ```
 Getting user name example:<br>
@@ -39,7 +39,7 @@ Getting user name example:<br>
 [
   {
     "name": "input",
-    "args": ["\"Enter your name:\"", "\"name\""]
+    "args": ["\"name\"", "\"Enter your name:\""]
   },
   {
     "name": "println",
