@@ -14,7 +14,7 @@ However, if you want to print the text on multiple lines, use this:
 ```json
 [
   {
-    "name": "print",
+    "name": "println",
     "args": ["\"Hello, world!\"", "\"Some text.\""]
   }
 ]
