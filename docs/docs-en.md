@@ -63,9 +63,11 @@ Syntax:<br>
   "args": [lib_name, ...]
 }
 ```
+
 ```
 ...
-``` is mean that you can import more than one library inside the block.<br>
+```
+ is mean that you can import more than one library inside the block.<br>
 Example:<br>
 ```json
 [
