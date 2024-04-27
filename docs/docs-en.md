@@ -114,3 +114,46 @@ Output: <br>
 ```
 .JEPL!.
 ```
+
+# Including other scripts into one
+Syntax: <br>
+```json
+{
+  "name": "include",
+  "args": [filename, ...]
+}
+```
+Example:<br>
+
+main.jepl:
+```json
+[
+  {
+    "name": "include",
+    "args": ["\"fun.jepl\""]
+  },
+  {
+    "name": "jump",
+    "args": ["\"Fun\"", "\"Hello!\""]
+  }
+]
+```
+fun.jepl:
+```json
+[
+  {
+    "name": "function",
+    "args": ["\"Fun\""],
+    "body": [
+      {
+        "name": "println",
+        "args": ["\"<\"+arg1+\">\""]
+      }
+    ]
+  }
+]
+```
+Output:
+```
+<Hello!>
+```
