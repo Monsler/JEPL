@@ -114,6 +114,7 @@ Output: <br>
 ```
 .JEPL!.
 ```
+Note: In function, you can use <b>argc</b> - count of arguments that provided to it.
 
 # Including other scripts into one
 Syntax: <br>
