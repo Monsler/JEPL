@@ -70,6 +70,12 @@ public class string implements Library {
            final String name = args.get(2);
            Values.addVar(name, str1+str2);
         });
+        out.put("string_indexOf", args -> {
+            final String str = args.get(0);
+            final String index = args.get(1);
+            final String var = args.get(2);
+            Values.addVar(var, str.indexOf(index));
+        });
         return out;
     }
 }

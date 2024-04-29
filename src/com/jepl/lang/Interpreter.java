@@ -52,16 +52,20 @@ public class Interpreter {
             }else if(name.equals("jump")){
                 final List<String> arg = getArgs(args);
                 String funName = arg.get(0);
+                int argc = 0;
                 if(arg.size() > 1) {
                     for (int a = 1; a < arg.size(); a++) {
+                        argc = a;
                         Values.addVar("arg" + a, arg.get(a));
                     }
                 }
+                Values.vars.put("argc", argc);
                 try {
                     Interpreter.interpret(Values.getFun(funName));
                 }catch (IllegalStateException e){
                     throw new JEPLException(new NoSuchFieldException(funName + " function is not exist"));
                 }
+                Values.vars.remove("argc");
                 if(arg.size() > 1) {
                     for (int a = 1; a < arg.size(); a++) {
                         Values.vars.remove("arg" + a);
@@ -162,7 +166,7 @@ public class Interpreter {
                 Values.addVar(to, System.getProperty(prop));
             }else if(name.equals("importJar")){
                 final List<String> arg = getArgs(args);
-                String path = arg.get(0);
+                String path = System.getProperty("user.dir")+"/"+arg.get(0);
                 String addressLib = arg.get(1);
                 try {
                     URLClassLoader child = new URLClassLoader(

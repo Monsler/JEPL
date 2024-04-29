@@ -25,5 +25,5 @@ public class Runner {
         }
     }
 
-    public static String langVersion = "1.52 Nightly";
+    public static String langVersion = "1.75";
 }

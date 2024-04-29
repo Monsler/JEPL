@@ -1,0 +1,14 @@
+[
+  {
+    "name": "getProperty",
+    "args": ["\"os.name\"", "\"osname\""]
+  },
+  {
+    "name": "print",
+    "args": ["\"Your os is\"", "osname"]
+  },
+  {
+    "name": "exit",
+    "args": [1]
+  }
+]

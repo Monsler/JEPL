@@ -12,20 +12,19 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 
 public class io implements Library {
     @Override
     public HashMap<String, Function> invoke() {
         HashMap<String, Function> out = new HashMap<>();
-        out.put("mkdir", args -> {
+        out.put("io_mkdir", args -> {
             final String dirname = args.get(0);
             File file = new File(dirname);
             if(!file.exists()){
                 file.mkdir();
             }
         });
-        out.put("delete", args -> {
+        out.put("io_delete", args -> {
             final String fname = args.get(0);
             File file = new File(fname);
             if(file.exists()) {
