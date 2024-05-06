@@ -1,0 +1,55 @@
+[
+  {
+    "name": "variable",
+    "args": ["\"count\"", 1]
+  },
+  {
+    "name": "variable",
+    "args": ["\"n\"", 10]
+  },
+  {
+    "name": "variable",
+    "args": ["\"num1\"", 0]
+  },
+  {
+    "name": "variable",
+    "args": ["\"num2\"", 1]
+  },
+  {
+    "name": "variable",
+    "args": ["\"next_number\"", "num2"]
+  },
+
+  {
+    "name": "function",
+    "args": ["\"main\""],
+    "body": [
+      {
+        "name": "while",
+        "args": ["count <= n"],
+        "body": [
+          {
+            "name": "print",
+            "args": ["next_number+\" \""]
+          },
+          {
+            "name": "neg",
+            "args": ["\"count\"", 1]
+          },
+          {
+            "name": "variable",
+            "args": ["\"num1\"", "num2"]
+          },
+          {
+            "name": "variable",
+            "args": ["\"num2\"", "next_number"]
+          },
+          {
+            "name": "variable",
+            "args": ["\"next_number\"", "num1+num2"]
+          }
+        ]
+      }
+    ]
+  }
+]
