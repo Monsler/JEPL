@@ -164,24 +164,32 @@ public class Interpreter {
                 String prop = arg.get(0);
                 String to = arg.get(1);
                 Values.addVar(to, System.getProperty(prop));
-            }else if(name.equals("importJar")){
+            }else if(name.equals("importJar")) {
                 final List<String> arg = getArgs(args);
-                String path = System.getProperty("user.dir")+"/"+arg.get(0);
+                String path = System.getProperty("user.dir") + "/" + arg.get(0);
                 String addressLib = arg.get(1);
                 try {
                     URLClassLoader child = new URLClassLoader(
-                            new URL[] { new URL("file:" + path) },
+                            new URL[]{new URL("file:" + path)},
                             Interpreter.class.getClassLoader()
                     );
                     Class<?> classToLoad = Class.forName(addressLib + ".Lib", true, child);
                     Method method = classToLoad.getDeclaredMethod("invoke");
                     Object instance = classToLoad.getDeclaredConstructor().newInstance();
                     HashMap<String, Function> lib = (HashMap<String, Function>) method.invoke(instance);
-                    Values.libs.put(addressLib,  lib);
+                    Values.libs.put(addressLib, lib);
 
-                } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException |
+                         InstantiationException | IllegalAccessException |
                          InvocationTargetException e) {
                     throw new RuntimeException(e);
+                }
+            }else if(name.equals("neg")){
+                final List<String> arg = getArgs(args);
+                final String var = arg.get(0);
+                final int val = Integer.parseInt(arg.get(1));
+                if(Values.vars.containsKey(var)){
+                    Values.vars.put(var, Integer.parseInt(Values.vars.get(var).toString())+val);
                 }
             }else{
                 List<String> arg = getArgs(args);

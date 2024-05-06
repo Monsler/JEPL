@@ -10,5 +10,6 @@
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="EvalEx-3.2.0" level="project" />
     <orderEntry type="library" name="github.datastax.oss.commons.io" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>
