@@ -15,21 +15,23 @@ class io : Library {
         val out = HashMap<String, Function>()
         out["io_mkdir"] = object : Function {
             override fun invoke(args: List<String>) {
-                val dirname = args[0]
-                val file = File(dirname)
-                if (!file.exists()) {
-                    file.mkdir()
+                val dirName = args[0]
+                val file = File(dirName)
+                with(file) {
+                    if(!exists())
+                        mkdir()
                 }
             }
         }
         out["io_delete"] = object : Function {
             override fun invoke(args: List<String>) {
-                val fname = args[0]
-                val file = File(fname)
-                if (file.exists()) {
-                    file.delete()
-                } else {
-                    throw JEPLException(RuntimeException("File $fname isn't exists!"))
+                val name = args[0]
+                val file = File(name)
+                with(file) {
+                    if (exists())
+                        delete()
+                    else
+                        throw JEPLException(RuntimeException("File $name isn't exists!"))
                 }
             }
         }

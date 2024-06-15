@@ -5,7 +5,8 @@ import java.io.IOException
 
 class Runner {
     companion object {
-        const val langVersion = "1.2"
+        val langVersion: String
+            get() = "1.34"
 
         fun runFile(file: String) {
             val codeOf: String

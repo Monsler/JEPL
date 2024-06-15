@@ -24,7 +24,7 @@ class arrays: Library {
 
         out["array_get"] = object : Function {
             override fun invoke(args: List<String>) {
-                val list = Values.vars[args[0]] as java.util.ArrayList<Any>?
+                val list = Values.vars[args[0]] as java.util.ArrayList<*>?
                 val `var` = args[2]
                 val index = args[1].toInt()
                 Values.addVar(`var`, list!![index - 1])
@@ -34,7 +34,7 @@ class arrays: Library {
         out["array_unset"] = object : Function {
             override fun invoke(args: List<String>) {
                 val list =
-                    Values.vars[args[0]] as java.util.ArrayList<Any>?
+                    Values.vars[args[0]] as java.util.ArrayList<*>?
                 val index = args[1].toInt()
                 list!!.removeAt(index - 1)
                 Values.addVar(args[0], list)

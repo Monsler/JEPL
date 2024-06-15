@@ -1,10 +1,12 @@
 package com.jepl.lang
 
-class JEPLException(e: Throwable): Exception(e) {
+import com.google.gson.JsonObject
+
+class JEPLException(e: Throwable, at: JsonObject? = null): Exception(e) {
     private var block = Interpreter.block+1
     private var throwable = e
 
-    override fun printStackTrace() {
-        System.err.println("Error [block $block] - ${this.throwable.message}")
+    init {
+        System.err.println("Error [block $block] - ${this.throwable.message}\nInterpreter says that something is wrong here:   ${at!!}\n\nJVM stacktrace:")
     }
 }

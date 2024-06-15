@@ -2,7 +2,6 @@ import com.google.gson.JsonParser
 import com.jepl.lang.Runner
 import java.io.*
 import java.net.URI
-import java.net.URL
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -36,7 +35,7 @@ object Main {
                     val response = client.send(request, HttpResponse.BodyHandlers.ofString())
                     if (response.body() != "<h1>Library not found on server!</h1>") {
                         saveUrl("$to/src/lib/$lib.jar", response.body())
-                        println("Library $lib successfully installed to $to/src/lib/coloride.jar")
+                        println("Library $lib successfully installed to $to/src/lib/$lib.jar")
                     } else {
                         println("Library $lib isn't found on repository!")
                     }
@@ -100,8 +99,8 @@ object Main {
         var `in`: BufferedInputStream? = null
         var fout: FileOutputStream? = null
         try {
-            `in` = BufferedInputStream(URL(urlString).openStream())
-            fout = FileOutputStream(filename)
+            `in` = BufferedInputStream(URI(urlString!!).toURL().openStream())
+            fout = FileOutputStream(filename!!)
 
             val data = ByteArray(1024)
             var count: Int

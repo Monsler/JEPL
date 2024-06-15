@@ -1,6 +1,5 @@
 package com.jepl.lang.libraries.string
 
-import com.ezylang.evalex.EvaluationException
 import com.ezylang.evalex.Expression
 import com.ezylang.evalex.parser.ParseException
 import com.jepl.lang.JEPLException
@@ -30,7 +29,7 @@ class string : Library {
             override fun invoke(args: List<String>) {
                 val vname = args[0]
                 val to = args[1]
-                Values.addVar(to!!, StringBuilder(vname).reverse().toString())
+                Values.addVar(to, StringBuilder(vname).reverse().toString())
             }
         }
         out["string_repeat"] = object : Function {
@@ -53,9 +52,9 @@ class string : Library {
                 val e = args[0]
                 val vname = args[0]
                 val expr = Expression(e)
-                expr.with("jeplversion", Runner.langVersion)
+                expr.with("JEPL_VERSION", Runner.langVersion)
                 for ((key, value) in Values.vars) {
-                    var `val` = try {
+                    val `val` = try {
                         value.toString().toInt()
                     } catch (ev: NumberFormatException) {
                         value
@@ -63,7 +62,7 @@ class string : Library {
                     expr.with(key, `val`)
                 }
                 try {
-                    Values.addVar(vname!!, expr.evaluate().stringValue)
+                    Values.addVar(vname, expr.evaluate().stringValue)
                 } catch (ex: Exception) {
                     throw JEPLException(RuntimeException(ex))
                 } catch (ex: ParseException) {

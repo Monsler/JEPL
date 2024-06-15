@@ -1,11 +1,11 @@
 package com.jepl.lang
 
+import com.google.gson.JsonParser
 import com.jepl.lang.libraries.Function
 import com.jepl.lang.libraries.Library
 
 class Values {
     companion object {
-        @JvmField
         var funs: HashMap<String, String> = HashMap()
         var vars: HashMap<String, Any> = HashMap()
         var libs: HashMap<String, HashMap<String, Function>> = HashMap()
@@ -26,16 +26,14 @@ class Values {
             vars[name] = value
         }
 
-        fun getVar(name: String) : Any? {
-            return vars[name]
-        }
-
         fun addLib(name: String) {
             val lib: Library
             try {
                 lib = Class.forName("com.jepl.lang.libraries.$name.$name").newInstance() as Library
-            }catch (e: Exception) {
-                throw JEPLException(RuntimeException(e))
+            }catch (e: NullPointerException) {
+                throw JEPLException(e, JsonParser.parseString("{\"name\": \"?\", \"args\": []}").asJsonObject)
+            }catch (e: ClassNotFoundException) {
+                throw JEPLException(e, JsonParser.parseString("{\"name\": \"?\", \"args\": []}").asJsonObject)
             }
             libs[name] = lib.invoke()
         }
