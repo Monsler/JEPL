@@ -2,6 +2,7 @@
 ## About
 <br>
 JEPL is interpreting JVM language, that allows to create projects like build scripts, games, applications, etc. <br>
+For now, JEPL are being rewritten in <b>Rust</b>.<br>
 <a href="https://github.com/Monsler/JEPL/blob/main/docs/docs-en.md">Documentation 🇬🇧</a>
 <br>
 
