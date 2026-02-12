@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "crates/jepl-lexer",
+    "crates/jepl-main",
+    "crates/jepl-parser"
+]
+resolver = "3"
