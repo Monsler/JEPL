@@ -1,15 +1,22 @@
-use std::time::Instant;
-
 use jepl_lexer::Lexer;
+use jepl_parser::Parser;
 
 fn main() {
-    let time = Instant::now();
-    let mut lexer = Lexer::new("[{\"13\": \"123\",\"41\": \"123\", \"elem\": 123}]");
+    let mut lexer = Lexer::new("[
+    {
+    \"name\": \"print\",
+    \"args\": [\"hello\", \"world\"]
+    },
+    {
+    \"name\": \"print\",
+    \"args\": [\"hho\", \"wzzzd\"]
+    }
+    ]
+    ");
     let array = lexer.tokenize();
 
-    for elem in array {
-        println!("{}", elem)
-    }
+    let mut parser= Parser::new(array);
+    let value = parser.parse();
 
-    println!("Time took to tokenize: {} ms.", time.elapsed().as_millis())
+    value.iter().for_each(|cmd| println!("{:?}", cmd));
 }

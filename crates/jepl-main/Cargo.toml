@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 jepl-lexer = {path = "../jepl-lexer"}
+jepl-parser = {path = "../jepl-parser"}

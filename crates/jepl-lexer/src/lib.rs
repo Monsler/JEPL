@@ -1,4 +1,4 @@
-mod token;
+pub mod token;
 
 use crate::token::*;
 
@@ -45,11 +45,9 @@ impl<'a> Lexer<'a> {
     }
 
     fn push_number(&mut self) {
-        let mut buf = String::new();
         let start = self.get_cursor_pos();
 
         while let Some((_, current)) = self.current_char && current.is_numeric() {
-            buf.push(current);
             self.advice();
         }
 
@@ -58,14 +56,21 @@ impl<'a> Lexer<'a> {
     }
 
     fn push_str(&mut self, delimiter: char) {
-        let mut buf = String::new();
         let start = self.get_cursor_pos();
 
-        while let Some((_, current)) = self.current_char && current != delimiter {
+        while let Some((_, current)) = self.current_char {
+            if current == delimiter {
+                break;
+            }
+
             self.advice();
-            buf.push(current); 
         }
-        
+
+        if self.current_char.is_none() {
+            panic!("Unterminated string");
+        }
+
+
         let end = self.get_cursor_pos();
 
         self.advice();
@@ -74,7 +79,7 @@ impl<'a> Lexer<'a> {
     } 
 
     fn skip_whitespaces(&mut self) {
-         while let Some((_, current)) = self.current_char && current == ' '{
+         while let Some((_, current)) = self.current_char && current.is_whitespace() {
             self.advice();
         }
     }
@@ -101,7 +106,7 @@ impl<'a> Lexer<'a> {
                 self.advice();
                 self.push_str(current);
             } else {
-                println!("WARNING!!! Unknown symbol: <{}> at pos {}; skipping it", current, 0);
+                //println!("WARNING!!! Unknown symbol: <{}> at pos {}; skipping it", current, 0);
                 self.advice();
             }
         }
