@@ -6,3 +6,5 @@ edition = "2024"
 [dependencies]
 jepl-lexer = {path = "../jepl-lexer"}
 jepl-parser = {path = "../jepl-parser"}
+jepl-interpreter = {path = "../jepl-interpreter"}
+clap = "4.5.58"

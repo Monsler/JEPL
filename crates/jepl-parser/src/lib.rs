@@ -1,4 +1,4 @@
-mod command;
+pub mod command;
 use crate::command::*;
 use jepl_lexer::token::*;
 
@@ -47,40 +47,77 @@ impl<'a> Parser<'a> {
         let mut args: Vec<&'a str> = Vec::new();
         let mut command_type = "";
 
-        while let Some(token) = self.current() {
-            if token.token_type == TokenType::RBRACE { break; }
-            match token.value {
+        if let Some(token) = self.current() {
+            if token.token_type == TokenType::RBRACE {
+                self.expect(TokenType::RBRACE);
+                return;
+            }
+        }
+
+        loop {
+            let key = match self.current() {
+                Some(t) if t.token_type == TokenType::STR => {
+                    t.value
+                }
+
+                Some(t) => {
+                    panic!("Expected STR; Got {:?}", t.token_type)
+                }
+
+                None => {
+                    panic!("Got EOF")
+                }
+            };
+
+            self.advice();
+
+            self.expect(TokenType::COLON);
+
+            match key {
                 "name" => {
-                    self.expect(TokenType::STR);
-                    self.expect(TokenType::COLON);
                     command_type = self.current().unwrap().value;
-                    self.advice();
+                    self.expect(TokenType::STR);
                 }
 
                 "args" => {
-                    self.expect(TokenType::STR);
-                    self.expect(TokenType::COLON);
                     args = self.parse_array();
-                },
+                }
 
                 _ => {
+                    panic!("Unexpected key: {}", key)
+                }
+            }
+
+            match self.current() {
+                Some(t) if t.token_type == TokenType::COMMA => {
+                    let pos = t.position;
                     self.advice();
+
+                    if let Some(token) = self.current() {
+                        if token.token_type == TokenType::RBRACE {
+                            panic!("Trailing comma at pos {}", pos)
+                        }
+                    } 
+                }
+
+                Some(t) if t.token_type == TokenType::RBRACE => {
+                    break;
+                }
+
+                Some(t) => {
+                    panic!("Expected COMMA or RBRACE; Got {:?} at pos {}", t.token_type, t.position)
+                }
+
+                None => {
+                    panic!("Unexpected EOF")
                 }
             }
         }
 
         self.expect(TokenType::RBRACE);
-
-        if let Some(next_token) = self.peek() {
-            if next_token.token_type != TokenType::RBRACE {
-                self.expect(TokenType::COMMA);
-            }
-        }
-
+      
         match command_type {
-            "print" => {
-                self.commands.push(Command::CommandPrint(args));
-            },
+            "print" => self.commands.push(Command::CommandPrint(args)),
 
             _ => {
                 // TODO check for user-defined functions
@@ -103,15 +140,26 @@ impl<'a> Parser<'a> {
                     self.advice();
                 }
 
+                TokenType::COMMA => {
+                    self.advice();
+                    if let Some(next_token) = self.current() {
+                        if next_token.token_type == TokenType::RBRACKET {
+                            panic!("Unexpected COMMA; Awaited RBRACKET")
+                        }
+                    }
+                    
+                }
+
                 _ => {
                     panic!("Unexpected token: {:?} ({:?})", token.token_type, token.value)
                 }
             }
+        }
 
-            if let Some(next_token) = self.current() {
-                if next_token.token_type != TokenType::RBRACKET {
-                    self.expect(TokenType::COMMA);
-                }
+        
+        if let Some(next_token) = self.current() {
+            if next_token.token_type != TokenType::RBRACKET && next_token.token_type != TokenType::COMMA {
+                panic!("Expected {:?} or {:?}; Got {:?}", TokenType::RBRACKET, TokenType::COMMA, next_token.token_type)
             }
         }
 
@@ -122,14 +170,38 @@ impl<'a> Parser<'a> {
 
     pub fn parse(&mut self) -> &Vec<Command<'a>> {
         self.expect(TokenType::LBRACKET);
+
         while let Some(token) = self.current() {
             if token.token_type == TokenType::RBRACKET {
                 break;
             }
 
             self.parse_command();
+
+            match self.current() {
+                Some(t) if t.token_type == TokenType::COMMA => {
+                    if let Some(n_token) = self.peek() {
+                        if n_token.token_type == TokenType::RBRACKET {
+                            panic!("Unexpected COMMA at pos {}", t.position)
+                        }
+                    }
+                    self.advice();
+                }
+                Some(t) if t.token_type == TokenType::RBRACKET => {
+                    break;
+                }
+                Some(t) => {
+                    panic!(
+                        "Expected COMMA or RBRACKET, got {:?} at pos {}",
+                        t.token_type, t.position
+                    );
+                }
+                None => break,
+            }
         }
 
+        self.expect(TokenType::RBRACKET);
         &self.commands
     }
+
 }

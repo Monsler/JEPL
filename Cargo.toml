@@ -2,6 +2,7 @@
 members = [
     "crates/jepl-lexer",
     "crates/jepl-main",
-    "crates/jepl-parser"
+    "crates/jepl-parser",
+    "crates/jepl-interpreter"
 ]
 resolver = "3"
