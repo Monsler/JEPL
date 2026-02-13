@@ -19,6 +19,12 @@ impl<'a> Interpreter<'a> {
                     args
                     .iter()
                     .for_each(|arg| print!("{} ", arg));
+                }
+
+                Command::CommandPrintln(args) => {
+                    args
+                    .iter()
+                    .for_each(|arg| print!("{} ", arg));
                     println!()
                 }
             }

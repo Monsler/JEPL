@@ -33,7 +33,7 @@ impl<'a> Parser<'a> {
                 self.advice()
             }
             Some(token) => {
-                panic!("Error parsing. Got {:?}; Awaited {:?} (pos {})", token_type, token.token_type, token.position)
+                panic!("Error parsing. Got {:?}; Awaited {:?} (pos {})", token.token_type, token_type, token.position)
             }
             None => {
                 panic!("Error parsing. Reached EOF")
@@ -95,7 +95,7 @@ impl<'a> Parser<'a> {
 
                     if let Some(token) = self.current() {
                         if token.token_type == TokenType::RBRACE {
-                            panic!("Trailing comma at pos {}", pos)
+                            panic!("Unexpected COMMA at pos {}", pos)
                         }
                     } 
                 }
@@ -118,6 +118,8 @@ impl<'a> Parser<'a> {
       
         match command_type {
             "print" => self.commands.push(Command::CommandPrint(args)),
+            
+            "println" => self.commands.push(Command::CommandPrintln(args)),
 
             _ => {
                 // TODO check for user-defined functions
